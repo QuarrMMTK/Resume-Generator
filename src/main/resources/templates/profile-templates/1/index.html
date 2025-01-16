@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Resume</title>
+
+    <meta name="viewport" content="width=device-width"/>
+    <meta name="description" content="The Curriculum Vitae of Joe Bloggs."/>
+    <meta charset="UTF-8">
+
+    <link type="text/css" rel="stylesheet" href="../profile-templates/1/style.css">
+    <link href='http://fonts.googleapis.com/css?family=Rokkitt:400,700|Lato:400,300' rel='stylesheet' type='text/css'>
+
+<!--    &lt;!&ndash;[if lt IE 9]>-->
+<!--    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>-->
+<!--    <![endif]&ndash;&gt;-->
+</head>
+<body id="top">
+<div id="cv" class="instaFade">
+    <div class="mainDetails">
+
+        <div id="name">
+            <h1 class="quickFade delayTwo edit">
+                <span th:text="${userProfile.firstName}">First Name</span>
+                <span th:text="${userProfile.lastName}">Last Name</span>
+            </h1>
+            <a th:if="${currentUsersProfile}" href="/edit">Edit</a>
+            <h2 class="quickFade delayThree" th:text="${userProfile.designation}">Designation</h2>
+        </div>
+
+        <div id="contactDetails" class="quickFade delayFour">
+            <ul>
+                <li><span th:text="${userProfile.email}">Email Address</span></li>
+                <li><span th:text="${userProfile.phone}">Phone Number</span></li>
+            </ul>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div id="mainArea" class="quickFade delayFive">
+        <section>
+            <article>
+                <div class="sectionTitle">
+                    <h1>Personal Profile</h1>
+                </div>
+
+                <div class="sectionContent">
+                    <p th:text="${userProfile.summary}">Summary</p>
+                </div>
+            </article>
+            <div class="clear"></div>
+        </section>
+
+
+        <section>
+            <div class="sectionTitle">
+                <h1>Work Experience</h1>
+            </div>
+
+            <div class="sectionContent">
+                <article th:each="job : ${userProfile.jobs}">
+                    <h2><span th:text="${job.designation}">Designation</span> at <span th:text="${job.company}">Company</span></h2>
+                    <p class="subDetails">
+                        <span th:text="${#temporals.monthName(job.startDate)} + ' ' + ${#temporals.year(job.startDate)}">Month Year</span>
+                        &mdash;
+                        <span th:text="${job.currentJob}? 'Present' : ${#temporals.monthName(job.endDate)} + ' ' + ${#temporals.year(job.endDate)}">Month Year</span>
+                    </p>
+                    <ul>
+                        <li th:each="responsibility : ${job.responsibilities}" th:text="${responsibility}">Responsibility</li>
+                    </ul>
+                    <p></p>
+                </article>
+            </div>
+            <div class="clear"></div>
+        </section>
+
+
+        <section>
+            <div class="sectionTitle">
+                <h1>Key Skills</h1>
+            </div>
+
+            <div class="sectionContent">
+                <ul class="keySkills">
+                    <li th:each="skill : ${userProfile.skills}" th:text="${skill}">A Key Skill</li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </section>
+
+
+        <section>
+            <div class="sectionTitle">
+                <h1>Education</h1>
+            </div>
+
+            <div class="sectionContent">
+                <article th:each="education : ${userProfile.educations}">
+                    <h2 th:text="${education.college}">University</h2>
+                    <p class="subDetails" th:text="${education.qualification}">Qualification</p>
+                    <p th:text="${education.major}">Computer Engineering</p>
+                </article>
+            </div>
+            <div class="clear"></div>
+        </section>
+
+    </div>
+</div>
+<script type="text/javascript">
+    var gaJsHost = (("https:" === document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+    var pageTracker = _gat._getTracker("UA-3753241-1");
+    pageTracker._initData();
+    pageTracker._trackPageview();
+</script>
+</body>
+</html>
