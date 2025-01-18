@@ -1,119 +1,155 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>Resume - Theme 2</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Resume</title>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <meta name="keywords" content="" />
-    <meta name="description" content="" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.7.0/build/reset-fonts-grids/reset-fonts-grids.css" media="all" />
-    <link rel="stylesheet" type="text/css" href="../profile-templates/2/style.css" media="all" />
-
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .header {
+            background: linear-gradient(135deg, #17a2b8, #6610f2);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+        }
+        .header h2 {
+            font-size: 1.25rem;
+            font-weight: 300;
+        }
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #6610f2;
+            margin-bottom: 1rem;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 0.5rem;
+        }
+        .card-header {
+            background-color: #6610f2;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+        .card-body {
+            padding: 1.5rem;
+        }
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+    </style>
 </head>
 <body>
 
-<div id="doc2" class="yui-t7">
-    <div id="inner">
+<div class="container my-5">
+    <!-- Header -->
+    <div class="header">
+        <h1>
+            <span th:text="${userProfile.firstName}">First Name</span>
+            <span th:text="${userProfile.lastName}">Last Name</span>
+        </h1>
+        <h2 th:text="${userProfile.designation}">Your Designation</h2>
+        <p class="mt-3">
+            <a th:if="${currentUsersProfile}" href="/edit" class="btn btn-light btn-sm">Edit Profile</a>
+        </p>
+    </div>
 
-        <div id="hd">
-            <div class="yui-gc">
-                <div class="yui-u first">
-                    <h1>
-                        <span th:text="${userProfile.firstName}"></span>
-                        <span th:text="${userProfile.lastName}"></span>
-                    </h1>
-                    <div class="edit">
-                        <h2 th:text="${userProfile.designation}"></h2>
-                        <a th:if="${currentUsersProfile}" href="/edit">Edit</a>
+    <!-- Contact Info -->
+    <div class="row mb-5 text-center">
+        <div class="col-md-6">
+            <p><strong>Email:</strong> <span th:text="${userProfile.email}">example@example.com</span></p>
+        </div>
+        <div class="col-md-6">
+            <p><strong>Phone:</strong> <span th:text="${userProfile.phone}">(123) 456-7890</span></p>
+        </div>
+    </div>
+
+    <!-- Profile Section -->
+    <div class="mb-5">
+        <h2 class="section-title">Profile</h2>
+        <p class="lead" th:text="${userProfile.summary}">Brief summary about yourself.</p>
+    </div>
+
+    <!-- Skills Section -->
+    <div class="mb-5">
+        <h2 class="section-title">Skills</h2>
+        <div class="skills d-flex flex-wrap gap-2">
+            <span th:each="skill : ${userProfile.skills}" th:text="${skill}" class="badge bg-primary">Skill</span>
+        </div>
+    </div>
+
+    <!-- Experience Section -->
+    <div class="mb-5">
+        <h2 class="section-title">Experience</h2>
+        <div class="row g-4">
+            <div th:each="job : ${userProfile.jobs}" class="col-md-6">
+                <div class="card">
+                    <div class="card-header" th:text="${job.company}">Company Name</div>
+                    <div class="card-body">
+                        <p><strong>Role:</strong> <span th:text="${job.designation}">Your Designation</span></p>
+                        <p>
+                            <strong>Duration:</strong>
+                            <span th:text="${#temporals.monthName(job.startDate)} + ' ' + ${#temporals.year(job.startDate)}">Start</span>
+                            -
+                            <span th:text="${job.currentJob ? 'Present' : #temporals.monthName(job.endDate) + ' ' + #temporals.year(job.endDate)}">End</span>
+                        </p>
+                        <ul>
+                            <li th:each="responsibility : ${job.responsibilities}" th:text="${responsibility}">Responsibility</li>
+                        </ul>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <div class="yui-u">
-                    <div class="contact-info">
-                        <h3 th:text="${userProfile.email}"></h3>
-                        <h3 th:text="${userProfile.phone}"></h3>
-                    </div><!--// .contact-info -->
+    <!-- Education Section -->
+    <div class="mb-5">
+        <h2 class="section-title">Education</h2>
+        <div class="row g-4">
+            <div th:each="education : ${userProfile.educations}" class="col-md-6">
+                <div class="card">
+                    <div class="card-header" th:text="${education.college}">College Name</div>
+                    <div class="card-body">
+                        <p><strong>Major:</strong> <span th:text="${education.major}">Your Major</span></p>
+                    </div>
                 </div>
-            </div><!--// .yui-gc -->
-        </div><!--// hd -->
+            </div>
+        </div>
+    </div>
+</div>
 
-        <div id="bd">
-            <div id="yui-main">
-                <div class="yui-b">
+<!-- Footer -->
+<div class="footer">
+    <p>
+        <span th:text="${userProfile.firstName}">First Name</span>
+        <span th:text="${userProfile.lastName}">Last Name</span> —
+        <span th:text="${userProfile.email}">example@example.com</span> —
+        <span th:text="${userProfile.phone}">(123) 456-7890</span>
+    </p>
+</div>
 
-                    <div class="yui-gf">
-                        <div class="yui-u first">
-                            <h2>Profile</h2>
-                        </div>
-                        <div class="yui-u">
-                            <p class="enlarge" th:text="${userProfile.summary}"></p>
-                        </div>
-                    </div><!--// .yui-gf -->
-
-                    <div class="yui-gf">
-                        <div class="yui-u first">
-                            <h2>Skills</h2>
-                        </div>
-                        <div class="yui-u">
-
-                            <div class="talent" th:each="skill : ${userProfile.skills}">
-                                <h2 th:text="${skill}">Web Design</h2>
-                            </div>
-
-                        </div>
-                    </div><!--// .yui-gf -->
-
-                    <div class="yui-gf">
-
-                        <div class="yui-u first">
-                            <h2>Experience</h2>
-                        </div><!--// .yui-u -->
-
-                        <div class="yui-u">
-
-                            <div class="job" th:each="job : ${userProfile.jobs}">
-                                <h2 th:text="${job.company}">Company</h2>
-                                <h3 th:text="${job.designation}">Designation</h3>
-                                <h4>
-                                    <span th:text="${#temporals.monthName(job.startDate)} + ' ' + ${#temporals.year(job.startDate)}">Month Year</span>
-                                    -
-                                    <span th:text="${job.currentJob}? 'Present' : ${#temporals.monthName(job.endDate)} + ' ' + ${#temporals.year(job.endDate)}">Month Year</span>
-                                </h4>
-                                <ul>
-                                    <li th:each="responsibility : ${job.responsibilities}" th:text="${responsibility}">Responsibility</li>
-                                </ul>
-                            </div>
-
-                        </div><!--// .yui-u -->
-                    </div><!--// .yui-gf -->
-
-
-                    <div class="yui-gf last">
-                        <div class="yui-u first">
-                            <h2>Education</h2>
-                        </div>
-                        <div class="yui-u mine" th:each="education : ${userProfile.educations}">
-                            <h2 th:text="${education.college}">Indiana University</h2>
-                            <h3 th:text="${education.major}">Computer Engineering</h3>
-                        </div>
-                    </div><!--// .yui-gf -->
-
-
-                </div><!--// .yui-b -->
-            </div><!--// yui-main -->
-        </div><!--// bd -->
-
-        <div id="ft">
-            <p><span th:text="${userProfile.firstName}">Jonathan</span> <span th:text="${userProfile.lastName}">Doe</span>&mdash; <span th:text="${userProfile.email}"></span> &mdash; <span th:text="${userProfile.phone}">(313) - 867-5309</span></p>
-        </div><!--// footer -->
-
-    </div><!-- // inner -->
-
-
-</div><!--// doc -->
-
-
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

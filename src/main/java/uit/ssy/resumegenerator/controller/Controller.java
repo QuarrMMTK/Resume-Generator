@@ -1,6 +1,8 @@
 package uit.ssy.resumegenerator.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uit.ssy.resumegenerator.models.Education;
@@ -21,6 +23,14 @@ public class Controller {
 
     @Autowired
     private UserProfileRepository userProfileRepository;
+
+    @Autowired
+    private ResourceLoader resourceLoader;
+
+    private boolean resourceExists(String path) {
+        Resource resource = resourceLoader.getResource("classpath:templates/" + path + ".html");
+        return resource.exists();
+    }
 
     @GetMapping("/")
     public String index() {
@@ -86,7 +96,12 @@ public class Controller {
         }
         UserProfile userProfile = getUserProfile(userName);
         model.addAttribute("userProfile", userProfile);
-        return "profile-templates/" + userProfile.getTheme() + "/index";
+        String themePath = "profile-templates/" + userProfile.getTheme() + "/index";
+        if (!resourceExists(themePath)) {
+            themePath = "profile-templates/default/index";
+        }
+        return themePath;
+
     }
 
     private UserProfile getUserProfile(String userName) {

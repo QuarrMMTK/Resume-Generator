@@ -1,118 +1,134 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Resume</title>
-
-    <meta name="viewport" content="width=device-width"/>
-    <meta name="description" content="The Curriculum Vitae of Joe Bloggs."/>
+    <title>Resume - Theme 1</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link type="text/css" rel="stylesheet" href="../profile-templates/1/style.css">
-    <link href='http://fonts.googleapis.com/css?family=Rokkitt:400,700|Lato:400,300' rel='stylesheet' type='text/css'>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!--    &lt;!&ndash;[if lt IE 9]>-->
-<!--    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>-->
-<!--    <![endif]&ndash;&gt;-->
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .header {
+            background: linear-gradient(135deg, #007bff, #6610f2);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+        }
+        .header h2 {
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 1rem;
+        }
+        .skills .badge {
+            background-color: #6610f2;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+    </style>
 </head>
-<body id="top">
-<div id="cv" class="instaFade">
-    <div class="mainDetails">
+<body>
 
-        <div id="name">
-            <h1 class="quickFade delayTwo edit">
-                <span th:text="${userProfile.firstName}">First Name</span>
-                <span th:text="${userProfile.lastName}">Last Name</span>
-            </h1>
-            <a th:if="${currentUsersProfile}" href="/edit">Edit</a>
-            <h2 class="quickFade delayThree" th:text="${userProfile.designation}">Designation</h2>
+<div class="container my-5">
+    <!-- Header -->
+    <div class="header">
+        <h1>
+            <span th:text="${userProfile.firstName}">First Name</span>
+            <span th:text="${userProfile.lastName}">Last Name</span>
+        </h1>
+        <h2 th:text="${userProfile.designation}">Your Designation</h2>
+        <p class="mt-3">
+            <a th:if="${currentUsersProfile}" href="/edit" class="btn btn-light btn-sm">Edit Profile</a>
+        </p>
+    </div>
+
+    <!-- Contact Info -->
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <p><strong>Email:</strong> <span th:text="${userProfile.email}">example@example.com</span></p>
         </div>
+        <div class="col-md-6">
+            <p><strong>Phone:</strong> <span th:text="${userProfile.phone}">(123) 456-7890</span></p>
+        </div>
+    </div>
 
-        <div id="contactDetails" class="quickFade delayFour">
+    <!-- Profile Section -->
+    <div class="mb-5">
+        <h2 class="section-title">Profile</h2>
+        <p class="lead" th:text="${userProfile.summary}">Brief summary about yourself.</p>
+    </div>
+
+    <!-- Skills Section -->
+    <div class="mb-5">
+        <h2 class="section-title">Skills</h2>
+        <div class="skills d-flex flex-wrap gap-2">
+            <span th:each="skill : ${userProfile.skills}" th:text="${skill}" class="badge">Skill</span>
+        </div>
+    </div>
+
+    <!-- Experience Section -->
+    <div class="mb-5">
+        <h2 class="section-title">Experience</h2>
+        <div th:each="job : ${userProfile.jobs}" class="mb-4">
+            <h3 th:text="${job.company}">Company Name</h3>
+            <p>
+                <strong>Role:</strong> <span th:text="${job.designation}">Your Designation</span><br>
+                <strong>Duration:</strong>
+                <span th:text="${#temporals.monthName(job.startDate)} + ' ' + ${#temporals.year(job.startDate)}">Start</span>
+                -
+                <span th:text="${job.currentJob ? 'Present' : #temporals.monthName(job.endDate) + ' ' + #temporals.year(job.endDate)}">End</span>
+            </p>
             <ul>
-                <li><span th:text="${userProfile.email}">Email Address</span></li>
-                <li><span th:text="${userProfile.phone}">Phone Number</span></li>
+                <li th:each="responsibility : ${job.responsibilities}" th:text="${responsibility}">Responsibility</li>
             </ul>
         </div>
-        <div class="clear"></div>
     </div>
 
-    <div id="mainArea" class="quickFade delayFive">
-        <section>
-            <article>
-                <div class="sectionTitle">
-                    <h1>Personal Profile</h1>
-                </div>
-
-                <div class="sectionContent">
-                    <p th:text="${userProfile.summary}">Summary</p>
-                </div>
-            </article>
-            <div class="clear"></div>
-        </section>
-
-
-        <section>
-            <div class="sectionTitle">
-                <h1>Work Experience</h1>
-            </div>
-
-            <div class="sectionContent">
-                <article th:each="job : ${userProfile.jobs}">
-                    <h2><span th:text="${job.designation}">Designation</span> at <span th:text="${job.company}">Company</span></h2>
-                    <p class="subDetails">
-                        <span th:text="${#temporals.monthName(job.startDate)} + ' ' + ${#temporals.year(job.startDate)}">Month Year</span>
-                        &mdash;
-                        <span th:text="${job.currentJob}? 'Present' : ${#temporals.monthName(job.endDate)} + ' ' + ${#temporals.year(job.endDate)}">Month Year</span>
-                    </p>
-                    <ul>
-                        <li th:each="responsibility : ${job.responsibilities}" th:text="${responsibility}">Responsibility</li>
-                    </ul>
-                    <p></p>
-                </article>
-            </div>
-            <div class="clear"></div>
-        </section>
-
-
-        <section>
-            <div class="sectionTitle">
-                <h1>Key Skills</h1>
-            </div>
-
-            <div class="sectionContent">
-                <ul class="keySkills">
-                    <li th:each="skill : ${userProfile.skills}" th:text="${skill}">A Key Skill</li>
-                </ul>
-            </div>
-            <div class="clear"></div>
-        </section>
-
-
-        <section>
-            <div class="sectionTitle">
-                <h1>Education</h1>
-            </div>
-
-            <div class="sectionContent">
-                <article th:each="education : ${userProfile.educations}">
-                    <h2 th:text="${education.college}">University</h2>
-                    <p class="subDetails" th:text="${education.qualification}">Qualification</p>
-                    <p th:text="${education.major}">Computer Engineering</p>
-                </article>
-            </div>
-            <div class="clear"></div>
-        </section>
-
+    <!-- Education Section -->
+    <div class="mb-5">
+        <h2 class="section-title">Education</h2>
+        <div th:each="education : ${userProfile.educations}" class="mb-4">
+            <h3 th:text="${education.college}">College Name</h3>
+            <p><strong>Major:</strong> <span th:text="${education.major}">Your Major</span></p>
+        </div>
     </div>
 </div>
-<script type="text/javascript">
-    var gaJsHost = (("https:" === document.location.protocol) ? "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-    var pageTracker = _gat._getTracker("UA-3753241-1");
-    pageTracker._initData();
-    pageTracker._trackPageview();
-</script>
+
+<!-- Footer -->
+<div class="footer">
+    <p>
+        <span th:text="${userProfile.firstName}">First Name</span>
+        <span th:text="${userProfile.lastName}">Last Name</span> —
+        <span th:text="${userProfile.email}">example@example.com</span> —
+        <span th:text="${userProfile.phone}">(123) 456-7890</span>
+    </p>
+</div>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
