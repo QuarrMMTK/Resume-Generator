@@ -93,8 +93,6 @@
                 <th>College</th>
                 <th>Qualification</th>
                 <th>Major</th>
-                <th>Start Date</th>
-                <th>End Date</th>
                 <th></th>
             </tr>
             </thead>
@@ -108,12 +106,6 @@
                 </label></td>
                 <td><label>
                     <input class="form-control" th:field="*{educations[__${stat.index}__].major}">
-                </label></td>
-                <td><label>
-                    <input class="form-control" type="date" th:field="*{educations[__${stat.index}__].startDate}">
-                </label></td>
-                <td><label>
-                    <input class="form-control" type="date" th:field="*{educations[__${stat.index}__].endDate}">
                 </label></td>
                 <td><a th:href="@{'./delete?type=education&index=' + ${stat.index}}">Delete</a></td>
             </tr>
